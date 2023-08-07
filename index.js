@@ -4,6 +4,9 @@
 const pomTime = document.querySelector("#pomTime").value;
 const pomBreakShort = document.querySelector("#pomBreakShort").value;
 const pomBreakLong = document.querySelector("#pomBreakLong").value;
+const pomTimeID = document.querySelector("#pomTime");
+const pomBreakShortID = document.querySelector("#pomBreakShort");
+const pomBreakLongID = document.querySelector("#pomBreakLong");
 const timerDisplay = document.querySelector('#timer')
 const startPause = document.querySelector('#startPause');
 const pomsCompletedID = document.querySelector('#pomsCompleted');
@@ -20,10 +23,6 @@ let breaksLongSkipped = 0;
 let pauseState = false;
 let remainingTimeSecs = 60;
 let remainingTimeMins; 
-
-window.onload = function () {
-	timerDisplay.textContent = pomTime + ':00';
-};
 
 function pomSessionState () {
 	if (pomSessionStateCounter === 7 ||
@@ -59,15 +58,22 @@ function startPomTimer (timeValue) {
 	}
 	
 	pauseState = true;
+	lockInputs();
 
 	// change the button text to read Pause and point to the pause function
 	startPause.textContent = 'Pause';
 
 	intervalId = setInterval(() => {
 		let counterDisplay = remainingTimeMins + ":" + remainingTimeSecs;
-		timerDisplay.textContent = counterDisplay;
-		// Updates tab title to show current elapsed time
-		document.title = counterDisplay;
+		
+		// This statment ensures that on start of countdown the first update is skipped
+		// so the user doesn't see 24:60
+		if (remainingTimeSecs === 60) {
+			
+		} else {
+			timerDisplay.textContent = counterDisplay;
+			document.title = counterDisplay;
+		}
 		remainingTimeSecs--;
 	if (remainingTimeMins < 0) {
 		console.log('Time Up!');
@@ -92,6 +98,7 @@ function pausePomTimer () {
 
 function skipPom() {
 	pauseState = false;
+	unlockInputs();
 	remainingTimeSecs = 60
 	clearInterval(intervalId);
 	startPause.textContent = 'Start';
@@ -117,23 +124,38 @@ function skipPom() {
 		pomSessionStateCounter--;
 	}
 	updateStats();
-}
+	unlockInputs();
+};
 
 function resetSessions () {
 	pauseState = false;
 	clearInterval(intervalId);
 	pomSessionStateCounter = 7;
 	timerDisplay.textContent = pomTime + ':00';
+	startPause.textContent = 'Start';
 	remainingTimeSecs = 60
 	pomsCompleted = 0;
 	pomsSkipped = 0;
 	breaksShortSkipped = 0;
 	breaksLongSkipped = 0;
-}
+	unlockInputs();
+};
 
 function updateStats () {
 	pomsCompletedID.textContent = pomsCompleted;
 	pomsSkippedID.textContent = pomsSkipped;
 	breaksShortSkippedID.textContent = breaksShortSkipped;
 	breaksLongSkippedID.textContent = breaksLongSkipped;
-}
+};
+
+function lockInputs () {
+	pomTimeID.setAttribute('readonly', true);
+	pomBreakShortID.setAttribute('readonly', true);
+	pomBreakLongID.setAttribute('readonly', true);
+};
+
+function unlockInputs () {
+	pomTimeID.removeAttribute('readonly');
+	pomBreakShortID.removeAttribute('readonly');
+	pomBreakLongID.removeAttribute('readonly');
+};
