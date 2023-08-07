@@ -30,7 +30,7 @@ let remainingTimeMins;
 // These update the timer display accordingly
 allInputFields.forEach(function(elem) {
 	elem.addEventListener('input', function (event) {
-		timerDisplay.textContent = pomSessionState() + ':00';
+		timerDisplay.textContent = pomSessionState().toString().padStart(2, '0') + ':00';
 	});
 });
 
@@ -87,7 +87,7 @@ function startPomTimer (timeValue) {
 	intervalId = setInterval(() => {
 		// TODO: how to get seconds to remain 2 digits
 		// implement if statement for single digit numbers vs 2
-		let counterDisplay = remainingTimeMins + ":" + remainingTimeSecs;
+		let counterDisplay = remainingTimeMins.toString().padStart(2, '0') + ":" + remainingTimeSecs.toString().padStart(2, '0');
 		
 		// This statment ensures that on start of countdown the first update is skipped
 		// so the user doesn't see 24:60
@@ -103,7 +103,6 @@ function startPomTimer (timeValue) {
 		pomsCompleted++;
 		pomSessionStateCounter--;
 		updateStats();
-		// TODO: why is bell not playing
 		playBell();
 		} else if (remainingTimeSecs < 0) {
 			remainingTimeMins--;
@@ -128,25 +127,24 @@ function skipPom() {
 	clearInterval(intervalId);
 	startPause.textContent = 'Start';
 	pomSessionStateCounter--;
-	console.log(pomSessionStateCounter);
 
 	if (pomSessionStateCounter === 6 ||
 		pomSessionStateCounter === 4 ||
 		pomSessionStateCounter === 2
 		) {
-		timerDisplay.textContent = pomBreakShort.value + ':00';
-		document.title = pomBreakShort.value + ':00';
+		timerDisplay.textContent = pomBreakShort.value.toString().padStart(2, '0') + ':00';
+		document.title = pomBreakShort.value.toString().padStart(2, '0') + ':00';
 		changeBGColor(breakColor);
 		pomsSkipped++;
 	} else if (pomSessionStateCounter === 0) {
-		timerDisplay.textContent = pomBreakLong.value + ':00';
-		document.title = pomBreakLong.value + ':00';
+		timerDisplay.textContent = pomBreakLong.value.toString().padStart(2, '0') + ':00';
+		document.title = pomBreakLong.value.toString().padStart(2, '0') + ':00';
 		breaksLongSkipped++;
 		changeBGColor(breakColor);
 		pomSessionStateCounter = 8;
 	} else {
-		timerDisplay.textContent = pomTime.value + ':00';
-		document.title = pomTime.value + ':00';
+		timerDisplay.textContent = pomTime.value.toString().padStart(2, '0') + ':00';
+		document.title = pomTime.value.toString().padStart(2, '0') + ':00';
 		changeBGColor(pomColor);
 		breaksShortSkipped++;
 	}
