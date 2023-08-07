@@ -83,30 +83,26 @@ function startPomTimer (timeValue) {
 	startPause.textContent = 'Pause';
 
 	intervalId = setInterval(() => {
-		// TODO: how to get seconds to remain 2 digits
-		// implement if statement for single digit numbers vs 2
 		let counterDisplay = remainingTimeMins.toString().padStart(2, '0') + ":" + remainingTimeSecs.toString().padStart(2, '0');
 		
 		// This statment ensures that on start of countdown the first update is skipped
 		// so the user doesn't see 24:60
-		if (remainingTimeSecs === 60) {
-			
-		} else {
+		if (remainingTimeSecs !== 60) {
 			timerDisplay.textContent = counterDisplay;
 			document.title = counterDisplay;
 		}
 		remainingTimeSecs--;
-	if (remainingTimeMins < 0) {
-		clearInterval(intervalId);
-		pomsCompleted++;
-		pomSessionStateCounter--;
-		updateStats();
-		playBell();
-		} else if (remainingTimeSecs < 0) {
-			remainingTimeMins--;
-			remainingTimeSecs = 60;
-			startPause.textContent = 'Pause';
-		}
+		if (remainingTimeMins < 0) {
+			clearInterval(intervalId);
+			pomsCompleted++;
+			pomSessionStateCounter--;
+			updateStats();
+			playBell();
+			} else if (remainingTimeSecs < 0) {
+				remainingTimeMins--;
+				remainingTimeSecs = 60;
+				startPause.textContent = 'Pause';
+			}
 		}, 1000);
 	};
 
