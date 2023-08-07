@@ -1,19 +1,20 @@
 // https://freshman.tech/pomodoro-timer/
 
 // Retrieve and store all DOM locators
-const pomTime = document.querySelector("#pomTime").value;
-const pomBreakShort = document.querySelector("#pomBreakShort").value;
-const pomBreakLong = document.querySelector("#pomBreakLong").value;
-const pomTimeID = document.querySelector("#pomTime");
-const pomBreakShortID = document.querySelector("#pomBreakShort");
-const pomBreakLongID = document.querySelector("#pomBreakLong");
+const allInputFields = document.querySelectorAll("input")
+const pomTime = document.querySelector("#pomTime");
+const pomBreakShort = document.querySelector("#pomBreakShort");
+const pomBreakLong = document.querySelector("#pomBreakLong");
 const timerDisplay = document.querySelector('#timer')
 const startPause = document.querySelector('#startPause');
 const pomsCompletedID = document.querySelector('#pomsCompleted');
 const pomsSkippedID = document.querySelector('#pomsSkipped');
 const breaksShortSkippedID = document.querySelector('#breaksShortSkipped');
 const breaksLongSkippedID = document.querySelector('#breaksLongSkipped');
+const pomColor = "rgb(186, 73, 73)";
+const breakColor = "rgb(57, 112, 151)";
 
+// Set variables for tracking timer states
 let intervalId;
 let pomSessionStateCounter = 7;
 let pomsCompleted = 0;
@@ -22,23 +23,42 @@ let breaksShortSkipped = 0;
 let breaksLongSkipped = 0;
 let pauseState = false;
 let remainingTimeSecs = 60;
-let remainingTimeMins; 
+let remainingTimeMins;
 
+
+// Event listeners for changes to input fields
+// These update the timer display accordingly
+allInputFields.forEach(function(elem) {
+	elem.addEventListener('input', function (event) {
+		timerDisplay.textContent = pomSessionState() + ':00';
+	});
+});
+
+/*
+7. 25 min pomodoro
+6. 5 min short break
+5. 25 min pomodoro
+4. 5 min short break
+3. 25 min pomodoro
+2. 5 min short break
+1. 25 min pomodoro
+0. 15 min long break
+*/
 function pomSessionState () {
 	if (pomSessionStateCounter === 7 ||
 		pomSessionStateCounter === 5 ||
 		pomSessionStateCounter === 3 ||
 		pomSessionStateCounter === 1
 		) {
-		return pomTime;
+			changeBGColor(pomColor);
+			return pomTime.value;
 	} else if (pomSessionStateCounter === 0) {
-		return pomBreakLong;
-
-	} else if (pomSessionStateCounter < 0) {
-		pomSessionStateCounter = 6;
-		return pomTime;
+		pomSessionStateCounter = 7;
+		changeBGColor(pomColor);
+		return pomBreakLong.value;
 	} else {
-		return pomBreakShort;
+		changeBGColor(breakColor);
+		return pomBreakShort.value;
 	}
 }
 
@@ -51,6 +71,7 @@ function buttonClick () {
 };
 
 function startPomTimer (timeValue) {
+	playClick();
 	if (!pauseState) {
 		remainingTimeMins = timeValue - 1;
 	} else {
@@ -64,6 +85,8 @@ function startPomTimer (timeValue) {
 	startPause.textContent = 'Pause';
 
 	intervalId = setInterval(() => {
+		// TODO: how to get seconds to remain 2 digits
+		// implement if statement for single digit numbers vs 2
 		let counterDisplay = remainingTimeMins + ":" + remainingTimeSecs;
 		
 		// This statment ensures that on start of countdown the first update is skipped
@@ -76,62 +99,69 @@ function startPomTimer (timeValue) {
 		}
 		remainingTimeSecs--;
 	if (remainingTimeMins < 0) {
-		console.log('Time Up!');
 		clearInterval(intervalId);
 		pomsCompleted++;
 		pomSessionStateCounter--;
 		updateStats();
+		// TODO: why is bell not playing
+		playBell();
 		} else if (remainingTimeSecs < 0) {
 			remainingTimeMins--;
 			remainingTimeSecs = 60;
+			startPause.textContent = 'Pause';
 		}
 		}, 1000);
 	};
 
 function pausePomTimer () {
-	// implement using active/inactive class toggle trick
-	// https://stackoverflow.com/questions/70052954/how-can-i-call-2-different-function-using-one-toggle-button-in-vanilla-javascrip	
+	playClick();
 	pauseState = false;
 	clearInterval(intervalId);
 	startPause.textContent = 'Resume';
 };
 
 function skipPom() {
+	playClick();
 	pauseState = false;
 	unlockInputs();
 	remainingTimeSecs = 60
 	clearInterval(intervalId);
 	startPause.textContent = 'Start';
+	pomSessionStateCounter--;
+	console.log(pomSessionStateCounter);
 
-	if (pomSessionStateCounter === 7 ||
-		pomSessionStateCounter === 5 ||
-		pomSessionStateCounter === 3 ||
-		pomSessionStateCounter === 1
+	if (pomSessionStateCounter === 6 ||
+		pomSessionStateCounter === 4 ||
+		pomSessionStateCounter === 2
 		) {
-		timerDisplay.textContent = pomBreakShort + ':00';
+		timerDisplay.textContent = pomBreakShort.value + ':00';
+		document.title = pomBreakShort.value + ':00';
+		changeBGColor(breakColor);
 		pomsSkipped++;
-		pomSessionStateCounter--;
 	} else if (pomSessionStateCounter === 0) {
-		timerDisplay.textContent = pomTime + ':00';
+		timerDisplay.textContent = pomBreakLong.value + ':00';
+		document.title = pomBreakLong.value + ':00';
 		breaksLongSkipped++;
-		pomSessionStateCounter--;
-	} else if (pomSessionStateCounter < 0) {
-		pomSessionStateCounter = 7;
-		timerDisplay.textContent = pomTime + ':00';
+		changeBGColor(breakColor);
+		pomSessionStateCounter = 8;
 	} else {
+		timerDisplay.textContent = pomTime.value + ':00';
+		document.title = pomTime.value + ':00';
+		changeBGColor(pomColor);
 		breaksShortSkipped++;
-		timerDisplay.textContent = pomTime + ':00';
-		pomSessionStateCounter--;
 	}
 	updateStats();
 	unlockInputs();
 };
 
 function resetSessions () {
+	playClick();
 	pauseState = false;
 	clearInterval(intervalId);
+	changeBGColor(pomColor);
 	pomSessionStateCounter = 7;
-	timerDisplay.textContent = pomTime + ':00';
+	timerDisplay.textContent = pomTime.value + ':00';
+	document.title = pomTime.value + ':00';
 	startPause.textContent = 'Start';
 	remainingTimeSecs = 60
 	pomsCompleted = 0;
@@ -139,6 +169,7 @@ function resetSessions () {
 	breaksShortSkipped = 0;
 	breaksLongSkipped = 0;
 	unlockInputs();
+	updateStats();
 };
 
 function updateStats () {
@@ -149,13 +180,28 @@ function updateStats () {
 };
 
 function lockInputs () {
-	pomTimeID.setAttribute('readonly', true);
-	pomBreakShortID.setAttribute('readonly', true);
-	pomBreakLongID.setAttribute('readonly', true);
+	pomTime.setAttribute('readonly', true);
+	pomBreakShort.setAttribute('readonly', true);
+	pomBreakLong.setAttribute('readonly', true);
 };
 
 function unlockInputs () {
-	pomTimeID.removeAttribute('readonly');
-	pomBreakShortID.removeAttribute('readonly');
-	pomBreakLongID.removeAttribute('readonly');
+	pomTime.removeAttribute('readonly');
+	pomBreakShort.removeAttribute('readonly');
+	pomBreakLong.removeAttribute('readonly');
+};
+
+function changeBGColor (color) {
+	const bgColor = document.querySelector("body");
+	bgColor.style.backgroundColor = color;
+};
+
+function playClick () {
+	let click = new Audio('/audio/click.mp3');
+	click.play();
+};
+
+function playBell () {
+	let bell = new Audio('/audio/bell.mp3');
+	bell.play();
 };

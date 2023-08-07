@@ -7,25 +7,31 @@
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lugrasimo&family=Lumanosimo&family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet">
   </head>
   <body>
     <main class="main-container">
         <h1>Pomodoro Timer</h1>
+        
+        <div id="input-container">
+          <label for="pomTime">Pomodoro Time</label>
+          <input type="number" id="pomTime" name="pomTime" value=25 max=25>
 
-        <label for="pomTime">Pomodoro Time</label>
-        <input type="number" id="pomTime" name="pomTime" value=25 max=25>
+          <label for="pomBreakShort">Short Break</label>
+          <input type="number" id="pomBreakShort" name="pomBreakShort" value=5>
 
-        <label for="pomBreakShort">Short Break</label>
-        <input type="number" id="pomBreakShort" name="pomBreakShort" value=5>
-
-        <label for="pomBreakLong">Long Break</label>
-        <input type="number" id="pomBreakLong" name="pomBreakLong" value=15>
-
+          <label for="pomBreakLong">Long Break</label>
+          <input type="number" id="pomBreakLong" name="pomBreakLong" value=15>
+        </div>
         <div id="timer">25:00</div>
 
-        <button type="button" id="startPause" onClick="buttonClick()">Start Timer</button>
-        <button type="button" id="skipPom" onClick="skipPom()">Skip</button>
-        <button type="button" id="resetSessions" onClick="resetSessions()">Reset Sessions</button>
+        <div id="button-container">
+          <button type="button" id="startPause" onClick="buttonClick()">Start Timer</button>
+          <button type="button" id="skipPom" onClick="skipPom()">Skip</button>
+          <button type="button" id="resetSessions" onClick="resetSessions()">Reset Sessions</button>
+        </div>
 
         <table>
           <tr>

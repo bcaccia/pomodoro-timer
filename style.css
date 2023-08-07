@@ -1,14 +1,50 @@
+html * {
+	font-family: 'Lugrasimo', cursive;
+	font-family: 'Lumanosimo', cursive;
+	font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+body {
+	background-color: rgb(189, 75, 75);
+	color: white;
+	font-weight: bold;
+}
+
+h1 {
+	border-bottom: 1px solid rgba(31, 31, 31, 0.205);
+}
+
 table, th, td {
-	border:1px solid black;
+	border:1px solid white;
       }
+
+th {
+	padding: 10px;
+}
 
 button {
 	width: 150px;
+	height: 3rem;
+	background-color: white;
+	color: rgb(186, 73, 73);
+	border: 0px none;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: 0 9px #c7c7c7;
+}
+
+button:active {
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
 }
 
 input {
 	width: 50px;
 	text-align: center;
+	color: white;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid white;
+	border-radius: 5px;
 }
 
 .main-container {
@@ -16,9 +52,22 @@ input {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	gap: 20px;
 	text-align: center;
+	border-radius: 10px;
 }
 
 #timer {
-	font-size: 10rem;
+	font-size: 8rem;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	padding: 30px;
+}
+
+#input-container {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
 }
