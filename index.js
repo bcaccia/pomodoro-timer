@@ -1,5 +1,3 @@
-// https://freshman.tech/pomodoro-timer/
-
 // Retrieve and store all DOM locators
 const allInputFields = document.querySelectorAll("input")
 const pomTime = document.querySelector("#pomTime");
