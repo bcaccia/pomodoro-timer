@@ -20,7 +20,7 @@ let pomsSkipped = 0;
 let breaksShortSkipped = 0;
 let breaksLongSkipped = 0;
 let pauseState = false;
-let remainingTimeSecs = 60;
+let remainingTimeSecs = 59;
 let remainingTimeMins;
 
 
@@ -43,6 +43,7 @@ allInputFields.forEach(function(elem) {
 0. 15 min long break
 */
 function pomSessionState () {
+	// TODO: check if odd or even
 	if (pomSessionStateCounter === 7 ||
 		pomSessionStateCounter === 5 ||
 		pomSessionStateCounter === 3 ||
@@ -98,9 +99,10 @@ function startPomTimer (timeValue) {
 			pomSessionStateCounter--;
 			updateStats();
 			playBell();
+			// BUG: fix extra pause at 00 seconds
 			} else if (remainingTimeSecs < 0) {
 				remainingTimeMins--;
-				remainingTimeSecs = 60;
+				remainingTimeSecs = 59;
 				startPause.textContent = 'Pause';
 			}
 		}, 1000);
@@ -117,7 +119,7 @@ function skipPom() {
 	playClick();
 	pauseState = false;
 	unlockInputs();
-	remainingTimeSecs = 60
+	remainingTimeSecs = 59
 	clearInterval(intervalId);
 	startPause.textContent = 'Start';
 	pomSessionStateCounter--;
