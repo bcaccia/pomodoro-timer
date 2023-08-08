@@ -43,23 +43,18 @@ allInputFields.forEach(function(elem) {
 0. 15 min long break
 */
 function pomSessionState () {
-	// TODO: check if odd or even
-	if (pomSessionStateCounter === 7 ||
-		pomSessionStateCounter === 5 ||
-		pomSessionStateCounter === 3 ||
-		pomSessionStateCounter === 1
-		) {
-			changeBGColor(pomColor);
-			return pomTime;
-	} else if (pomSessionStateCounter === 0) {
+	if (pomSessionStateCounter === 0) {
 		pomSessionStateCounter = 7;
 		changeBGColor(pomColor);
 		return pomBreakLong;
-	} else {
+	} else if ((pomSessionStateCounter % 2) === 0) {
 		changeBGColor(breakColor);
 		return pomBreakShort;
+	} else {
+		changeBGColor(pomColor);
+		return pomTime;
 	}
-}
+};
 
 function buttonClick () {
 	if (!pauseState) {
