@@ -92,12 +92,15 @@ function startPomTimer (timeValue) {
 			playBell();
 			pauseState = false;
 			clearInterval(intervalId);
-			pomsCompleted++;
-			pomSessionStateCounter--;
 			resetTimerDisplay(pomSessionState());
 			startPause.textContent = 'Start Timer';
 			document.title = 'Times Up!';
+				if ((pomSessionStateCounter % 2) !== 0) {
+					pomsCompleted++;
+				}
 			updateStats();
+			pomSessionStateCounter--;
+			pomSessionState()
 			} else if (remainingTimeSecs < 0) {
 				remainingTimeMins--;
 				remainingTimeSecs = 60;
@@ -119,7 +122,7 @@ function skipPom() {
 	unlockInputs();
 	remainingTimeSecs = 60
 	clearInterval(intervalId);
-	startPause.textContent = 'Start';
+	startPause.textContent = 'Start Timer';
 	pomSessionStateCounter--;
 
 	if (pomSessionStateCounter === 0) {
@@ -147,7 +150,7 @@ function resetSessions () {
 	changeBGColor(pomColor);
 	pomSessionStateCounter = 7;
 	resetTimerDisplay(pomTime);
-	startPause.textContent = 'Start';
+	startPause.textContent = 'Start Timer';
 	remainingTimeSecs = 60
 	pomsCompleted = 0;
 	pomsSkipped = 0;
@@ -178,7 +181,11 @@ function unlockInputs () {
 
 function changeBGColor (color) {
 	const bgColor = document.querySelector("body");
+	const buttonColor = document.querySelectorAll("button")
 	bgColor.style.backgroundColor = color;
+	buttonColor.forEach((elem) => {
+		elem.style.color = color;
+	});
 };
 
 function resetTimerDisplay (timeValue) {
