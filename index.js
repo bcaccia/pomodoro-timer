@@ -122,18 +122,15 @@ function skipPom() {
 	startPause.textContent = 'Start';
 	pomSessionStateCounter--;
 
-	if (pomSessionStateCounter === 6 ||
-		pomSessionStateCounter === 4 ||
-		pomSessionStateCounter === 2
-		) {
-		resetTimerDisplay(pomBreakShort);
-		changeBGColor(breakColor);
-		pomsSkipped++;
-	} else if (pomSessionStateCounter === 0) {
+	if (pomSessionStateCounter === 0) {
 		resetTimerDisplay(pomBreakLong);
 		breaksLongSkipped++;
 		changeBGColor(breakColor);
 		pomSessionStateCounter = 8;
+	} else if ((pomSessionStateCounter % 2) === 0) {
+		resetTimerDisplay(pomBreakShort);
+		changeBGColor(breakColor);
+		pomsSkipped++;
 	} else {
 		resetTimerDisplay(pomTime);
 		changeBGColor(pomColor);
