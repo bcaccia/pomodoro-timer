@@ -99,7 +99,6 @@ function startPomTimer (timeValue) {
 			pomSessionStateCounter--;
 			updateStats();
 			playBell();
-			// BUG: fix extra pause at 00 seconds
 			} else if (remainingTimeSecs < 0) {
 				remainingTimeMins--;
 				remainingTimeSecs = 59;
@@ -128,19 +127,16 @@ function skipPom() {
 		pomSessionStateCounter === 4 ||
 		pomSessionStateCounter === 2
 		) {
-		timerDisplay.textContent = pomBreakShort.value.toString().padStart(2, '0') + ':00';
-		document.title = pomBreakShort.value.toString().padStart(2, '0') + ':00';
+		resetTimerDisplay(pomBreakShort);
 		changeBGColor(breakColor);
 		pomsSkipped++;
 	} else if (pomSessionStateCounter === 0) {
-		timerDisplay.textContent = pomBreakLong.value.toString().padStart(2, '0') + ':00';
-		document.title = pomBreakLong.value.toString().padStart(2, '0') + ':00';
+		resetTimerDisplay(pomBreakLong);
 		breaksLongSkipped++;
 		changeBGColor(breakColor);
 		pomSessionStateCounter = 8;
 	} else {
-		timerDisplay.textContent = pomTime.value.toString().padStart(2, '0') + ':00';
-		document.title = pomTime.value.toString().padStart(2, '0') + ':00';
+		resetTimerDisplay(pomTime);
 		changeBGColor(pomColor);
 		breaksShortSkipped++;
 	}
@@ -154,8 +150,7 @@ function resetSessions () {
 	clearInterval(intervalId);
 	changeBGColor(pomColor);
 	pomSessionStateCounter = 7;
-	timerDisplay.textContent = pomTime.value + ':00';
-	document.title = pomTime.value + ':00';
+	resetTimerDisplay(pomTime);
 	startPause.textContent = 'Start';
 	remainingTimeSecs = 60
 	pomsCompleted = 0;
@@ -189,6 +184,11 @@ function changeBGColor (color) {
 	const bgColor = document.querySelector("body");
 	bgColor.style.backgroundColor = color;
 };
+
+function resetTimerDisplay (timeValue) {
+	timerDisplay.textContent = timeValue.value.toString().padStart(2, '0') + ':00';
+	document.title = timeValue.value.toString().padStart(2, '0') + ':00';
+}
 
 function playClick () {
 	let click = new Audio('/audio/click.mp3');
