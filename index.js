@@ -20,7 +20,7 @@ let pomsSkipped = 0;
 let breaksShortSkipped = 0;
 let breaksLongSkipped = 0;
 let pauseState = false;
-let remainingTimeSecs = 59;
+let remainingTimeSecs = 60;
 let remainingTimeMins;
 
 
@@ -28,7 +28,7 @@ let remainingTimeMins;
 // These update the timer display accordingly
 allInputFields.forEach(function(elem) {
 	elem.addEventListener('input', function (event) {
-		timerDisplay.textContent = pomSessionState().toString().padStart(2, '0') + ':00';
+		timerDisplay.textContent = pomSessionState().value.toString().padStart(2, '0') + ':00';
 	});
 });
 
@@ -50,20 +50,20 @@ function pomSessionState () {
 		pomSessionStateCounter === 1
 		) {
 			changeBGColor(pomColor);
-			return pomTime.value;
+			return pomTime;
 	} else if (pomSessionStateCounter === 0) {
 		pomSessionStateCounter = 7;
 		changeBGColor(pomColor);
-		return pomBreakLong.value;
+		return pomBreakLong;
 	} else {
 		changeBGColor(breakColor);
-		return pomBreakShort.value;
+		return pomBreakShort;
 	}
 }
 
 function buttonClick () {
 	if (!pauseState) {
-		startPomTimer (pomSessionState());
+		startPomTimer (pomSessionState().value);
 	} else {
 		pausePomTimer()
 	}
@@ -89,19 +89,23 @@ function startPomTimer (timeValue) {
 		// This statment ensures that on start of countdown the first update is skipped
 		// so the user doesn't see 24:60
 		if (remainingTimeSecs !== 60) {
-			timerDisplay.textContent = counterDisplay;
 			document.title = counterDisplay;
+			timerDisplay.textContent = counterDisplay;
 		}
 		remainingTimeSecs--;
 		if (remainingTimeMins < 0) {
+			playBell();
+			pauseState = false;
 			clearInterval(intervalId);
 			pomsCompleted++;
 			pomSessionStateCounter--;
+			resetTimerDisplay(pomSessionState());
+			startPause.textContent = 'Start Timer';
+			document.title = 'Times Up!';
 			updateStats();
-			playBell();
 			} else if (remainingTimeSecs < 0) {
 				remainingTimeMins--;
-				remainingTimeSecs = 59;
+				remainingTimeSecs = 60;
 				startPause.textContent = 'Pause';
 			}
 		}, 1000);
@@ -118,7 +122,7 @@ function skipPom() {
 	playClick();
 	pauseState = false;
 	unlockInputs();
-	remainingTimeSecs = 59
+	remainingTimeSecs = 60
 	clearInterval(intervalId);
 	startPause.textContent = 'Start';
 	pomSessionStateCounter--;
@@ -186,9 +190,9 @@ function changeBGColor (color) {
 };
 
 function resetTimerDisplay (timeValue) {
-	timerDisplay.textContent = timeValue.value.toString().padStart(2, '0') + ':00';
 	document.title = timeValue.value.toString().padStart(2, '0') + ':00';
-}
+	timerDisplay.textContent = timeValue.value.toString().padStart(2, '0') + ':00';
+};
 
 function playClick () {
 	let click = new Audio('/audio/click.mp3');
