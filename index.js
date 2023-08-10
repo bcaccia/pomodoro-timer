@@ -100,7 +100,7 @@ function startPomTimer (timeValue) {
 				}
 			updateStats();
 			pomSessionStateCounter--;
-			pomSessionState()
+			resetTimerDisplay(pomSessionState());
 			} else if (remainingTimeSecs < 0) {
 				remainingTimeMins--;
 				remainingTimeSecs = 60;
@@ -119,7 +119,6 @@ function pausePomTimer () {
 function skipPom() {
 	playClick();
 	pauseState = false;
-	unlockInputs();
 	remainingTimeSecs = 60
 	clearInterval(intervalId);
 	startPause.textContent = 'Start Timer';
